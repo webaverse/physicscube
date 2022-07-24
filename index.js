@@ -112,7 +112,7 @@ export default () => {
 
   // ### ConeGeometry
 
-  // const geometry = new THREE.ConeGeometry( 0.5, 2, 8 );
+  // const geometry = new THREE.ConeGeometry( 2, 5, 3 );
   // const material = new THREE.MeshStandardMaterial( {color: 0xffff00} );
   // const physicsCube = new THREE.Mesh( geometry, material );
   // app.add( physicsCube );
