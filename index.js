@@ -16,6 +16,8 @@ const localMatrix2 = new THREE.Matrix4();
 export default () => {
   const app = useApp();
   const physics = usePhysics();
+
+  // ### CubeGeometry
   
   const size = new THREE.Vector3(2, 1, 1);
   const geometry = new THREE.BoxBufferGeometry(size.x, size.y, size.z);
@@ -108,12 +110,16 @@ export default () => {
 
   const physicsObject = physics.addBoxGeometry(app.position, app.quaternion, size.clone().multiplyScalar(0.5), true);
 
+  // ### ConeGeometry
+
   // const geometry = new THREE.ConeGeometry( 0.5, 2, 8 );
   // const material = new THREE.MeshStandardMaterial( {color: 0xffff00} );
   // const physicsCube = new THREE.Mesh( geometry, material );
   // app.add( physicsCube );
 
   // const physicsObject = physics.addConvexGeometry(physicsCube);
+
+  //
 
   useFrame(({timestamp}) => {
     physicsCube.position.copy(physicsObject.position).sub(app.position);
