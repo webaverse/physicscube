@@ -108,6 +108,13 @@ export default () => {
 
   const physicsObject = physics.addBoxGeometry(app.position, app.quaternion, size.clone().multiplyScalar(0.5), true);
 
+  // const geometry = new THREE.ConeGeometry( 0.5, 2, 8 );
+  // const material = new THREE.MeshStandardMaterial( {color: 0xffff00} );
+  // const physicsCube = new THREE.Mesh( geometry, material );
+  // app.add( physicsCube );
+
+  // const physicsObject = physics.addConvexGeometry(physicsCube);
+
   useFrame(({timestamp}) => {
     physicsCube.position.copy(physicsObject.position).sub(app.position);
     physicsCube.quaternion.copy(physicsObject.quaternion);
