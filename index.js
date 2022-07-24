@@ -146,6 +146,6 @@ export default () => {
   metaversefileApi.getPairByPhysicsId(1)[0] === physicscube
   true
 
-  physicsManager.setVelocity(physicscubeApp.physicsObjects[0],new THREE.Vector3(0,15,0),true)
-  physicsManager.setAngularVelocity(physicscubeApp.physicsObjects[0],new THREE.Vector3(1,2,3),true)
+  physicsManager.getScene().setVelocity(physicscubeApp.physicsObjects[0],new THREE.Vector3(0,15,0),true)
+  physicsManager.getScene().setAngularVelocity(physicscubeApp.physicsObjects[0],new THREE.Vector3(1,2,3),true)
 */
