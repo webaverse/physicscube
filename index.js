@@ -108,7 +108,7 @@ export default () => {
   const physicsCube = new THREE.Mesh(geometry, material);
   app.add(physicsCube);
 
-  const physicsObject = physics.addBoxGeometry(app.position, app.quaternion, size.clone().multiplyScalar(0.5), true);
+  const physicsObject = physics.addBoxGeometry(new THREE.Vector3(0, 0, 0), app.quaternion, size.clone().multiplyScalar(0.5), true);
 
   // ### ConeGeometry
 
@@ -121,12 +121,37 @@ export default () => {
 
   //
 
-  useFrame(({timestamp}) => {
-    physicsCube.position.copy(physicsObject.position).sub(app.position);
-    physicsCube.quaternion.copy(physicsObject.quaternion);
-    physicsCube.updateMatrixWorld();
+  useFrame(({ timestamp }) => {
+    // ! Bellow Code Has Bugs XXX
+    // if ((updateIndex % 300) === 0) {
+    //   // console.log('reset pos 1', physicsObject.position.toArray().join(','));
+    //   physicsObject.position.copy(app.position).add(p);
+    //   physicsObject.quaternion.copy(app.quaternion).premultiply(q);
+    //   // physicsObject.physicsMesh.scale.copy(s);
+    //   physicsObject.updateMatrixWorld();
+    //   physicsObject.needsUpdate = true;
+    //   // physics.setPhysicsTransform(physicsCubePhysicsId, p, q, s);
+    //   // const {position, quaternion} = physics.getPhysicsTransform(physicsCubePhysicsId);
+    // }
+    // ! Above Code Has Bugs XXX
+
+    // console.log('tick pos 1', physicsCube.position.toArray().join(','));
+    // const {position, quaternion} = physics.getPhysicsTransform(physicsCubePhysicsId);
+    physicsObject.updateMatrixWorld();
+    localMatrix
+      .copy(physicsObject.matrixWorld)
+      .premultiply(localMatrix2.copy(app.matrixWorld).invert())
+      .decompose(
+        physicsCube.position,
+        physicsCube.quaternion,
+        physicsCube.scale
+      );
+    // console.log('position', physicsObject.position.toArray().join(','), physicsCube.position.toArray().join(','));
+    app.updateMatrixWorld();
+    // physicsCube.updateMatrixWorld();
+    // updateIndex++;
   });
-  
+
   useCleanup(() => {
     // console.log('cleanup 1');
     physics.removeGeometry(physicsObject);
