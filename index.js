@@ -92,16 +92,18 @@ export default () => {
     metalness: 0,
   });
   const physicsCube = new THREE.Mesh(geometry, material);
-  app.add(physicsCube);
-  
   physicsCube.visible = false;
+  app.add(physicsCube);
+
+  const physicsObject = physics.addBoxGeometry(app.position, app.quaternion, size.clone().multiplyScalar(0.5), true);
+  physics.disableActor(physicsObject);
+
   Promise.all(promises)
     .then(() => {
       physicsCube.visible = true;
+      physics.enableActor(physicsObject);
     }).catch((e) => {
     });
-
-  const physicsObject = physics.addBoxGeometry(app.position, app.quaternion, size.clone().multiplyScalar(0.5), true);
 
   // ### ConeGeometry
 
