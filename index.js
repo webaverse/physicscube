@@ -50,51 +50,37 @@ export default () => {
     }
   }
 
-  const map = new THREE.Texture();
-  map.wrapS = THREE.RepeatWrapping;
-  map.wrapT = THREE.RepeatWrapping;
-  {
-    const img = new Image();
-    img.onload = () => {
-      map.image = img;
-      map.needsUpdate = true;
-    };
-    img.onerror = err => {
-      console.warn(err);
-    };
-    img.crossOrigin = 'Anonymous';
-    img.src = baseUrl + texBase + '_Base_Color.png';
-  }
-  const normalMap = new THREE.Texture();
-  normalMap.wrapS = THREE.RepeatWrapping;
-  normalMap.wrapT = THREE.RepeatWrapping;
-  {
-    const img = new Image();
-    img.onload = () => {
-      normalMap.image = img;
-      normalMap.needsUpdate = true;
-    };
-    img.onerror = err => {
-      console.warn(err);
-    };
-    img.crossOrigin = 'Anonymous';
-    img.src = baseUrl + texBase + '_Normal.png';
-  }
-  const bumpMap = new THREE.Texture();
-  bumpMap.wrapS = THREE.RepeatWrapping;
-  bumpMap.wrapT = THREE.RepeatWrapping;
-  {
-    const img = new Image();
-    img.onload = () => {
-      bumpMap.image = img;
-      bumpMap.needsUpdate = true;
-    };
-    img.onerror = err => {
-      console.warn(err);
-    };
-    img.crossOrigin = 'Anonymous';
-    img.src = baseUrl + texBase + '_Height.png';
-  }
+  const urls = [
+    baseUrl + texBase + '_Base_Color.png',
+    baseUrl + texBase + '_Normal.png',
+    baseUrl + texBase + '_Height.png'
+  ];
+  var maps = {};
+  const promises = urls.map(url => {
+    return new Promise((resolve) => {
+      const map = new THREE.Texture();
+      map.wrapS = THREE.RepeatWrapping;
+      map.wrapT = THREE.RepeatWrapping;
+      {
+        const img = new Image();
+        img.onload = () => {
+          map.image = img;
+          map.needsUpdate = true;
+          resolve();
+        };
+        img.onerror = err => {
+          console.warn(err);
+        };
+        img.crossOrigin = 'Anonymous';
+        img.src = url;
+      }
+      maps[url] = map;
+    })
+  });
+  const map = maps[urls[0]];
+  const normalMap = maps[urls[1]];
+  const bumpMap = maps[urls[2]];
+
   const material = new THREE.MeshStandardMaterial({
     // color: 0x00b2fc,
     // specular: 0x00ffff,
@@ -107,8 +93,15 @@ export default () => {
   });
   const physicsCube = new THREE.Mesh(geometry, material);
   app.add(physicsCube);
+  
+  physicsCube.visible = false;
+  Promise.all(promises)
+    .then(() => {
+      physicsCube.visible = true;
+    }).catch((e) => {
+    });
 
-  const physicsObject = physics.addBoxGeometry(new THREE.Vector3(0, 0, 0), app.quaternion, size.clone().multiplyScalar(0.5), true);
+  const physicsObject = physics.addBoxGeometry(app.position, app.quaternion, size.clone().multiplyScalar(0.5), true);
 
   // ### ConeGeometry
 
