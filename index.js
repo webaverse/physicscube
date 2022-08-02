@@ -108,7 +108,7 @@ export default () => {
   const physicsCube = new THREE.Mesh(geometry, material);
   app.add(physicsCube);
 
-  const physicsObject = physics.addBoxGeometry(new THREE.Vector3(0, 0, 0), app.quaternion, size.clone().multiplyScalar(0.5), true);
+  const physicsObject = physics.addBoxGeometry(app.position, app.quaternion, size.clone().multiplyScalar(0.5), true);
 
   // ### ConeGeometry
 
